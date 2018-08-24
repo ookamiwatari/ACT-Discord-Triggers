@@ -52,14 +52,25 @@ namespace ACT_DiscordTriggers {
 			this.lblLog = new System.Windows.Forms.Label();
 			this.txtToken = new System.Windows.Forms.TextBox();
 			this.lblBotTok = new System.Windows.Forms.Label();
+			this.lblReplace = new System.Windows.Forms.Label();
+			this.replaceDataGridView = new System.Windows.Forms.DataGridView();
+			this.findDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.replaceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.replaceDataSet = new System.Data.DataSet();
+			this.replaceDataTable = new System.Data.DataTable();
+			this.replaceDataColumnFind = new System.Data.DataColumn();
+			this.replaceDataColumnReplace = new System.Data.DataColumn();
 			((System.ComponentModel.ISupportInitialize)(this.sliderTTSSpeed)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.sliderTTSVol)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.replaceDataGridView)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.replaceDataSet)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.replaceDataTable)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// logBox
 			// 
 			this.logBox.BackColor = System.Drawing.SystemColors.Window;
-			this.logBox.Location = new System.Drawing.Point(21, 262);
+			this.logBox.Location = new System.Drawing.Point(21, 482);
 			this.logBox.Multiline = true;
 			this.logBox.Name = "logBox";
 			this.logBox.ReadOnly = true;
@@ -202,7 +213,7 @@ namespace ACT_DiscordTriggers {
 			// lblLog
 			// 
 			this.lblLog.AutoSize = true;
-			this.lblLog.Location = new System.Drawing.Point(18, 239);
+			this.lblLog.Location = new System.Drawing.Point(18, 459);
 			this.lblLog.Name = "lblLog";
 			this.lblLog.Size = new System.Drawing.Size(60, 13);
 			this.lblLog.TabIndex = 45;
@@ -225,10 +236,69 @@ namespace ACT_DiscordTriggers {
 			this.lblBotTok.TabIndex = 42;
 			this.lblBotTok.Text = "Discord Bot Token";
 			// 
+			// lblReplace
+			// 
+			this.lblReplace.AutoSize = true;
+			this.lblReplace.Location = new System.Drawing.Point(18, 239);
+			this.lblReplace.Name = "lblReplace";
+			this.lblReplace.Size = new System.Drawing.Size(46, 12);
+			this.lblReplace.TabIndex = 60;
+			this.lblReplace.Text = "Replace";
+			// 
+			// replaceDataGridView
+			// 
+			this.replaceDataGridView.AutoGenerateColumns = false;
+			this.replaceDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.replaceDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+			this.findDataGridViewTextBoxColumn,
+			this.replaceDataGridViewTextBoxColumn});
+			this.replaceDataGridView.DataMember = "table";
+			this.replaceDataGridView.DataSource = this.replaceDataSet;
+			this.replaceDataGridView.Location = new System.Drawing.Point(21, 262);
+			this.replaceDataGridView.Name = "replaceDataGridView";
+			this.replaceDataGridView.RowTemplate.Height = 21;
+			this.replaceDataGridView.Size = new System.Drawing.Size(461, 170);
+			this.replaceDataGridView.TabIndex = 61;
+			// 
+			// findDataGridViewTextBoxColumn
+			// 
+			this.findDataGridViewTextBoxColumn.DataPropertyName = "find";
+			this.findDataGridViewTextBoxColumn.HeaderText = "find";
+			this.findDataGridViewTextBoxColumn.Name = "findDataGridViewTextBoxColumn";
+			// 
+			// replaceDataGridViewTextBoxColumn
+			// 
+			this.replaceDataGridViewTextBoxColumn.DataPropertyName = "replace";
+			this.replaceDataGridViewTextBoxColumn.HeaderText = "replace";
+			this.replaceDataGridViewTextBoxColumn.Name = "replaceDataGridViewTextBoxColumn";
+			// 
+			// replaceDataSet
+			// 
+			this.replaceDataSet.DataSetName = "replaceDataSet";
+			this.replaceDataSet.Tables.AddRange(new System.Data.DataTable[] {
+			this.replaceDataTable});
+			// 
+			// replaceDataTable
+			// 
+			this.replaceDataTable.Columns.AddRange(new System.Data.DataColumn[] {
+			this.replaceDataColumnFind,
+			this.replaceDataColumnReplace});
+			this.replaceDataTable.TableName = "table";
+			// 
+			// replaceDataColumnFind
+			// 
+			this.replaceDataColumnFind.ColumnName = "find";
+			// 
+			// replaceDataColumnReplace
+			// 
+			this.replaceDataColumnReplace.ColumnName = "replace";
+			// 
 			// DiscordPlugin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.replaceDataGridView);
+			this.Controls.Add(this.lblReplace);
 			this.Controls.Add(this.logBox);
 			this.Controls.Add(this.chkAutoConnect);
 			this.Controls.Add(this.discordConnectbtn);
@@ -248,9 +318,12 @@ namespace ACT_DiscordTriggers {
 			this.Controls.Add(this.txtToken);
 			this.Controls.Add(this.lblBotTok);
 			this.Name = "DiscordPlugin";
-			this.Size = new System.Drawing.Size(505, 455);
+			this.Size = new System.Drawing.Size(505, 675);
 			((System.ComponentModel.ISupportInitialize)(this.sliderTTSSpeed)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.sliderTTSVol)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.replaceDataGridView)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.replaceDataSet)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.replaceDataTable)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -281,6 +354,14 @@ namespace ACT_DiscordTriggers {
 		private Button btnJoin;
 		private Label lblLog;
 		private TextBox txtToken;
+		private Label lblReplace;
+		private DataGridView replaceDataGridView;
+		private System.Data.DataSet replaceDataSet;
+		private System.Data.DataTable replaceDataTable;
+		private System.Data.DataColumn replaceDataColumnFind;
+		private System.Data.DataColumn replaceDataColumnReplace;
+		private DataGridViewTextBoxColumn findDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn replaceDataGridViewTextBoxColumn;
 		private Label lblBotTok;
 		#endregion
 
@@ -355,6 +436,10 @@ namespace ACT_DiscordTriggers {
 
 		#region Discord Methods
 		private void speak(string text) {
+			for(int i = 0, l = this.replaceDataSet.Tables["table"].Rows.Count; i < l; i++)
+			{
+				text = text.Replace(this.replaceDataSet.Tables["table"].Rows[i]["find"].ToString(), this.replaceDataSet.Tables["table"].Rows[i]["replace"].ToString());
+			}
 			DiscordClient.Speak(text, cmbTTS.SelectedItem.ToString(), sliderTTSVol.Value, sliderTTSSpeed.Value);
 		}
 
@@ -466,8 +551,12 @@ namespace ACT_DiscordTriggers {
 				try {
 					while (xReader.Read())
 						if (xReader.NodeType == XmlNodeType.Element)
+						{
 							if (xReader.LocalName == "SettingsSerializer")
 								xmlSettings.ImportFromXml(xReader);
+							if (xReader.LocalName == "SettingsReplace")
+								this.replaceDataSet.ReadXml(xReader);
+						}
 				} catch (Exception ex) {
 					lblStatus.Text = "Error loading settings: " + ex.Message;
 				}
@@ -486,6 +575,9 @@ namespace ACT_DiscordTriggers {
 				xWriter.WriteStartElement("Config");
 				xWriter.WriteStartElement("SettingsSerializer");
 				xmlSettings.ExportToXml(xWriter);
+				xWriter.WriteEndElement();
+				xWriter.WriteStartElement("SettingsReplace");
+				this.replaceDataSet.WriteXml(xWriter);
 				xWriter.WriteEndElement();
 				xWriter.WriteEndElement();
 				xWriter.WriteEndDocument();
