@@ -54,12 +54,14 @@ namespace ACT_DiscordTriggers {
 			this.lblBotTok = new System.Windows.Forms.Label();
 			this.lblReplace = new System.Windows.Forms.Label();
 			this.replaceDataGridView = new System.Windows.Forms.DataGridView();
-			this.findDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.replaceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.replaceDataSet = new System.Data.DataSet();
 			this.replaceDataTable = new System.Data.DataTable();
 			this.replaceDataColumnFind = new System.Data.DataColumn();
 			this.replaceDataColumnReplace = new System.Data.DataColumn();
+			this.replaceDataColumnVoice = new System.Data.DataColumn();
+			this.findDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.replaceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.voiceDataGridViewComboBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.sliderTTSSpeed)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.sliderTTSVol)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.replaceDataGridView)).BeginInit();
@@ -251,7 +253,8 @@ namespace ACT_DiscordTriggers {
 			this.replaceDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.replaceDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
 			this.findDataGridViewTextBoxColumn,
-			this.replaceDataGridViewTextBoxColumn});
+			this.replaceDataGridViewTextBoxColumn,
+			this.voiceDataGridViewComboBoxColumn});
 			this.replaceDataGridView.DataMember = "table";
 			this.replaceDataGridView.DataSource = this.replaceDataSet;
 			this.replaceDataGridView.Location = new System.Drawing.Point(21, 262);
@@ -259,6 +262,32 @@ namespace ACT_DiscordTriggers {
 			this.replaceDataGridView.RowTemplate.Height = 21;
 			this.replaceDataGridView.Size = new System.Drawing.Size(461, 170);
 			this.replaceDataGridView.TabIndex = 61;
+			// 
+			// replaceDataSet
+			// 
+			this.replaceDataSet.DataSetName = "replaceDataSet";
+			this.replaceDataSet.Tables.AddRange(new System.Data.DataTable[] {
+			this.replaceDataTable});
+			// 
+			// replaceDataTable
+			// 
+			this.replaceDataTable.Columns.AddRange(new System.Data.DataColumn[] {
+			this.replaceDataColumnFind,
+			this.replaceDataColumnReplace,
+			this.replaceDataColumnVoice});
+			this.replaceDataTable.TableName = "table";
+			// 
+			// replaceDataColumnFind
+			// 
+			this.replaceDataColumnFind.ColumnName = "find";
+			// 
+			// replaceDataColumnReplace
+			// 
+			this.replaceDataColumnReplace.ColumnName = "replace";
+			// 
+			// replaceDataColumnVoice
+			// 
+			this.replaceDataColumnVoice.ColumnName = "voice";
 			// 
 			// findDataGridViewTextBoxColumn
 			// 
@@ -272,26 +301,12 @@ namespace ACT_DiscordTriggers {
 			this.replaceDataGridViewTextBoxColumn.HeaderText = "replace";
 			this.replaceDataGridViewTextBoxColumn.Name = "replaceDataGridViewTextBoxColumn";
 			// 
-			// replaceDataSet
+			// voiceDataGridViewComboBoxColumn
 			// 
-			this.replaceDataSet.DataSetName = "replaceDataSet";
-			this.replaceDataSet.Tables.AddRange(new System.Data.DataTable[] {
-			this.replaceDataTable});
-			// 
-			// replaceDataTable
-			// 
-			this.replaceDataTable.Columns.AddRange(new System.Data.DataColumn[] {
-			this.replaceDataColumnFind,
-			this.replaceDataColumnReplace});
-			this.replaceDataTable.TableName = "table";
-			// 
-			// replaceDataColumnFind
-			// 
-			this.replaceDataColumnFind.ColumnName = "find";
-			// 
-			// replaceDataColumnReplace
-			// 
-			this.replaceDataColumnReplace.ColumnName = "replace";
+			this.voiceDataGridViewComboBoxColumn.DataPropertyName = "voice";
+			this.voiceDataGridViewComboBoxColumn.HeaderText = "voice";
+			this.voiceDataGridViewComboBoxColumn.Name = "voiceDataGridViewComboBoxColumn";
+			this.voiceDataGridViewComboBoxColumn.Items.Add("");
 			// 
 			// DiscordPlugin
 			// 
@@ -360,8 +375,10 @@ namespace ACT_DiscordTriggers {
 		private System.Data.DataTable replaceDataTable;
 		private System.Data.DataColumn replaceDataColumnFind;
 		private System.Data.DataColumn replaceDataColumnReplace;
+		private System.Data.DataColumn replaceDataColumnVoice;
 		private DataGridViewTextBoxColumn findDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn replaceDataGridViewTextBoxColumn;
+		private DataGridViewComboBoxColumn voiceDataGridViewComboBoxColumn;
 		private Label lblBotTok;
 		#endregion
 
@@ -372,8 +389,10 @@ namespace ACT_DiscordTriggers {
 
 			//Add installed voices to dropdown
 			var tts = new SpeechSynthesizer();
-			foreach (InstalledVoice v in tts.GetInstalledVoices())
+			foreach (InstalledVoice v in tts.GetInstalledVoices()) {
 				cmbTTS.Items.Add(v.VoiceInfo.Name);
+				this.voiceDataGridViewComboBoxColumn.Items.Add(v.VoiceInfo.Name);
+			}
 			cmbTTS.SelectedIndex = 0;
 		}
 
@@ -438,7 +457,11 @@ namespace ACT_DiscordTriggers {
 		private void speak(string text) {
 			for(int i = 0, l = this.replaceDataSet.Tables["table"].Rows.Count; i < l; i++)
 			{
-				text = text.Replace(this.replaceDataSet.Tables["table"].Rows[i]["find"].ToString(), this.replaceDataSet.Tables["table"].Rows[i]["replace"].ToString());
+				if(text == this.replaceDataSet.Tables["table"].Rows[i]["find"].ToString() && this.replaceDataSet.Tables["table"].Rows[i]["voice"].ToString() != "")
+				{
+					DiscordClient.Speak(this.replaceDataSet.Tables["table"].Rows[i]["replace"].ToString(), this.replaceDataSet.Tables["table"].Rows[i]["voice"].ToString(), sliderTTSVol.Value, sliderTTSSpeed.Value);
+					return;
+				}
 			}
 			DiscordClient.Speak(text, cmbTTS.SelectedItem.ToString(), sliderTTSVol.Value, sliderTTSSpeed.Value);
 		}
